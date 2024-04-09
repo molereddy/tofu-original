@@ -40,9 +40,9 @@ def main(cfg):
         try:
         # do thing
             if cfg.use_pretrained:
-                model = AutoModelForCausalLM.from_pretrained(model_id, use_flash_attention_2=model_cfg["flash_attention2"]=="true", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
+                model = AutoModelForCausalLM.from_pretrained(model_id, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
             else:
-                model = AutoModelForCausalLM.from_pretrained(cfg.model_path, use_flash_attention_2=model_cfg["flash_attention2"]=="true", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
+                model = AutoModelForCausalLM.from_pretrained(cfg.model_path, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
         except Exception as e:
             continue
         # perhaps reconnect, etc.
