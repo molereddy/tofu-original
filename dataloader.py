@@ -20,6 +20,10 @@ def printll(name, inp):
     print(name, [round(x, 4) for x in inp])
 
 class CustomTrainer(Trainer):
+    def __init__(self, *args, **kwargs):
+        self.hyperparams = kwargs.pop('hyperparams')
+        super(CustomTrainer, self).__init__(*args, **kwargs)
+        
     def compute_loss(self, model, inputs, return_outputs=False):
         input_ids, labels, attention_mask = inputs
         # forward pass

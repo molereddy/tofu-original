@@ -62,6 +62,7 @@ model.generation_config.do_sample = True
 trainer = CustomTrainer(
     model=model,
     train_dataset=torch_format_dataset,
+    hyperparams={},
     args=training_args,
     data_collator=custom_data_collator,
 )
