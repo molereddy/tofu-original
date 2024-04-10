@@ -16,14 +16,14 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, set_se
 from data_module import TextDatasetQA, custom_data_collator
 from dataloader import CustomTrainer
 
-prec='fp32'
-ds_enabled=True
+prec='bf16'
+ds_enabled=False
 
 training_args = TrainingArguments(
+    per_device_train_batch_size=22,
     output_dir="./outputs",
     overwrite_output_dir=True,
     num_train_epochs=2,
-    per_device_train_batch_size=1,
     save_steps=1000,
     save_total_limit=2,
 )
@@ -37,9 +37,9 @@ elif prec=='bf16':
     if ds_enabled: training_args.deepspeed = 'config/ds_config.json'
     training_args.bf16 = True
 elif prec=='fp16':
-    dtype=torch.bfloat16
-    if ds_enabled: training_args.deepspeed = 'config/ds_config.json'
-    training_args.bf16 = True
+    dtype=torch.float16
+    if ds_enabled: training_args.deepspeed = 'config/ds_config_fp16.json'
+    training_args.fp16 = True
 else:
     assert False
 
@@ -51,6 +51,8 @@ num_devices = int(os.environ.get('WORLD_SIZE', 1))
 print(f"num_devices: {num_devices}")
 
 
+# Hot fix for https://discuss.huggingface.co/t/help-with-llama-2-finetuning-setup/50035
+model.generation_config.do_sample = True
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 tokenizer.pad_token = tokenizer.eos_token
