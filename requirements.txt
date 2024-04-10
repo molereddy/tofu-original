@@ -1,3 +1,6 @@
+numpy
+pandas
+torch
 git+https://github.com/huggingface/transformers
 datasets
 accelerate
@@ -15,3 +18,5 @@ packaging
 bitsandbytes
 scipy
 ninja
+mpi4py
+

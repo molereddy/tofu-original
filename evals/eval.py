@@ -48,14 +48,14 @@ def main(cfg):
     batch_size = 16
 
     model = None
-    config = AutoConfig.from_pretrained(model_id, use_flash_attention_2=model_cfg["flash_attention2"]=="true", trust_remote_code = True, device_map=device_map)
+    config = AutoConfig.from_pretrained(model_id, attn_implementation="flash_attention_2", trust_remote_code = True, device_map=device_map)
     for attempt in range(3):
         try:
         # do thing
             if cfg.use_pretrained:
-                model = AutoModelForCausalLM.from_pretrained(model_id, config=config, use_flash_attention_2=model_cfg["flash_attention2"]=="true", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
+                model = AutoModelForCausalLM.from_pretrained(model_id, config=config, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
             else:
-                model = AutoModelForCausalLM.from_pretrained(cfg.model_path, config=config, use_flash_attention_2=model_cfg["flash_attention2"]=="true", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
+                model = AutoModelForCausalLM.from_pretrained(cfg.model_path, config=config, attn_implementation="flash_attention_2", torch_dtype=torch.bfloat16, trust_remote_code = True, device_map=device_map)
         except Exception as e:
             continue
         # perhaps reconnect, etc.
